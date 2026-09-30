@@ -1,0 +1,14 @@
+import Head from "next/head";
+import Link from "next/link";
+import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import styles from "@/styles/Checkout.module.css";
+
+const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
+const serviceFee = 3000;
+
+export default function CheckoutPage() {
+  const { cartItems, subtotal, increaseQuantity, decreaseQuantity, removeFromCart } = useCart();
+  const total = subtotal + serviceFee;
+  return <><Head><title>Your Sweet Box | Dulce</title></Head><main className={styles.page}><div className={styles.container}><header className={styles.header}><Link href="/" className={styles.backButton}><ArrowLeft size={19} /> Back</Link><h1>Your Sweet Box</h1><span /></header>{cartItems.length === 0 ? <section className={styles.emptyState}><div className={styles.emptyIcon}>*</div><h2>Your sweet box is still empty <span role="img" aria-label="cake">&#127856;</span></h2><p>Find a little treat that makes your day sweeter.</p><Link className={styles.primaryButton} href="/#menu">Explore treats</Link></section> : <div className={styles.checkoutLayout}><section className={styles.itemsSection}><p className={styles.eyebrow}>YOUR SELECTED TREATS</p><h2>Ready for a little joy</h2><div className={styles.itemList}>{cartItems.map((item) => <article key={item.id} className={styles.cartItem}><div className={`${styles.itemImage} ${item.color ? styles[item.color] : ""}`}><span>{item.image}</span></div><div className={styles.itemDetails}><p>{item.category}</p><h3>{item.name}</h3><strong>{rupiah.format(item.price)}</strong></div><div className={styles.itemActions}><button type="button" className={styles.removeButton} onClick={() => removeFromCart(item.id)} aria-label={`Remove ${item.name}`}><Trash2 size={16} /></button><div className={styles.quantityControl}><button type="button" onClick={() => decreaseQuantity(item.id)} aria-label={`Decrease ${item.name}`}><Minus size={14} /></button><span>{item.quantity}</span><button type="button" onClick={() => increaseQuantity(item.id)} aria-label={`Increase ${item.name}`}><Plus size={14} /></button></div></div></article>)}</div></section><aside className={styles.summaryCard}><p className={styles.eyebrow}>ORDER SUMMARY</p><h2>A sweet little total</h2><div className={styles.summaryRow}><span>Subtotal</span><strong>{rupiah.format(subtotal)}</strong></div><div className={styles.summaryRow}><span>Service Fee</span><strong>{rupiah.format(serviceFee)}</strong></div><div className={styles.totalRow}><span>Total</span><strong>{rupiah.format(total)}</strong></div><Link className={styles.primaryButton} href="/payment">Continue to Payment</Link><p className={styles.note}>Your treats are almost on their way.</p></aside></div>}</div></main></>;
+}
