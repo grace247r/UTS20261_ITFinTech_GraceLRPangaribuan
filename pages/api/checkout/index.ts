@@ -9,6 +9,7 @@ const serviceFee = 3000;
 type CheckoutRequest = {
   items?: { productId?: string; quantity?: number }[];
   customer?: { name?: string; email?: string; phone?: string };
+  shippingAddress?: { recipientName?: string; phone?: string; address?: string; city?: string; postalCode?: string };
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,12 +18,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { items, customer } = req.body as CheckoutRequest;
+  const { items, customer, shippingAddress } = req.body as CheckoutRequest;
   const name = customer?.name?.trim();
   const email = customer?.email?.trim();
   const phone = customer?.phone?.trim();
+  const recipientName = shippingAddress?.recipientName?.trim();
+  const shippingPhone = shippingAddress?.phone?.trim();
+  const address = shippingAddress?.address?.trim();
+  const city = shippingAddress?.city?.trim();
+  const postalCode = shippingAddress?.postalCode?.trim();
 
   if (!name || !email || !phone) return res.status(400).json({ message: "Name, email, and phone are required" });
+  if (!recipientName || !shippingPhone || !address || !city || !postalCode) return res.status(400).json({ message: "Complete shipping address information is required" });
   if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ message: "Your cart must contain at least one item" });
 
   const requestedQuantities = new Map<string, number>();
@@ -54,6 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const checkout = await Checkout.create({
       items: checkoutItems,
       customer: { name, email, phone },
+      shippingAddress: { recipientName, phone: shippingPhone, address, city, postalCode },
       subtotal,
       serviceFee,
       total,
