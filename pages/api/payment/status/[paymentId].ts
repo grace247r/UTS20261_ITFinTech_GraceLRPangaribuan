@@ -1,0 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { isValidObjectId } from "mongoose";
+import connectMongoDB from "@/lib/mongodb";
+import Payment from "@/models/Payment";
+import Checkout from "@/models/Checkout";
+export default async function handler(req: NextApiRequest, res: NextApiResponse) { if (req.method !== "GET") { res.setHeader("Allow", "GET"); return res.status(405).json({ message: "Method not allowed" }); } const paymentId = req.query.paymentId; if (typeof paymentId !== "string" || !isValidObjectId(paymentId)) return res.status(400).json({ message: "A valid payment ID is required" }); try { await connectMongoDB(); const payment = await Payment.findById(paymentId); if (!payment) return res.status(404).json({ message: "Payment not found" }); const checkout = await Checkout.findById(payment.checkoutId); return res.status(200).json({ success: true, payment: { id: payment._id.toString(), orderId: payment.midtransOrderId, amount: payment.amount, status: payment.status, paymentMethod: payment.paymentMethod, paidAt: payment.paidAt }, checkout: checkout ? { id: checkout._id.toString(), status: checkout.status } : null }); } catch (error) { console.error("Unable to get payment status:", error); return res.status(500).json({ message: "Unable to get payment status" }); } }

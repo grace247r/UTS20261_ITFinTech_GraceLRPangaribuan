@@ -12,7 +12,6 @@ export default function HeroBanner() {
       </div>
       <div className={styles.heroArt} aria-label="A strawberry cake illustration" role="img">
         <span className={styles.sparkleOne}>*</span><span className={styles.sparkleTwo}>*</span><span className={styles.dotOne} /><span className={styles.dotTwo} />
-        <div className={styles.sticker}>so<br />yummy!</div>
         <div className={styles.cake}><div className={styles.berry}>&hearts;</div><div className={styles.cakeTop} /><div className={styles.cakeCream} /><div className={styles.cakeBase} /></div>
       </div>
     </section>

@@ -1,0 +1,17 @@
+.card { position: relative; border: 0; background: transparent; cursor: pointer; text-align: center; transition: transform .25s ease; }
+.card:hover { transform: translateY(-6px); }
+.visual { position: relative; min-height: 250px; display: grid; place-items: center; overflow: hidden; border-radius: 48% 48% 42% 42% / 30% 30% 22% 22%; }
+.visual::before { content: ""; position: absolute; width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.22); top: -25px; right: -22px; z-index: 1; }
+.visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 2; }
+.visual > span:not(.badge) { position: relative; z-index: 2; font-size: 88px; filter: drop-shadow(0 12px 6px rgba(57,44,39,.18)); }
+.pink { background: #ffcbd2; }.chocolate { background: #d7a58c; }.matcha { background: #c7e0c0; }.berryDessert { background: #d8c6ea; }.caramel { background: #f6d7a1; }.coffee { background: #dfc4ac; }.cookie { background: #f0ce97; }.peach { background: #ffcbb8; }
+.badge { position: absolute; z-index: 4; top: 14px; left: 50%; transform: translateX(-50%); padding: 8px 14px; border: 2px solid rgba(255,112,72,.18); border-radius: 99px; background: #fff9f1; color: #ed5e38; font-size: 11px; font-weight: 900; letter-spacing: .9px; line-height: 1; white-space: nowrap; box-shadow: 0 5px 12px rgba(57,44,39,.18); }
+.add { position: relative; z-index: 3; display: flex; align-items: center; gap: 5px; margin: -17px auto 13px; padding: 5px 6px 5px 13px; border: 0; border-radius: 99px; background: #fff; color: #392c27; font-size: 10px; font-weight: 800; letter-spacing: .8px; box-shadow: 0 5px 12px rgba(57,44,39,.12); transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease; }
+.add:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 16px rgba(57,44,39,.17); }
+.add:active { transform: scale(.96); }
+.added { background: #6baf92; color: #fff; box-shadow: 0 6px 13px rgba(66,132,104,.28); animation: addedPop .35s ease-out; }
+.plus { width: 23px; height: 23px; border-radius: 50%; display: grid; place-items: center; background: #ff7048; color: #fff; }
+.name { font-family: Fredoka, "Arial Rounded MT Bold", sans-serif; font-size: 18px; line-height: 1.12; min-height: 40px; padding: 0 8px; }
+.price { display: block; margin-top: 6px; color: #392c27; font-size: 13px; font-weight: 700; }
+@keyframes addedPop { 0% { transform: scale(.82); } 65% { transform: scale(1.1); } 100% { transform: scale(1); } }
+@media (max-width: 620px) { .visual { min-height: 180px; }.visual > span:not(.badge) { font-size: 65px; }.badge { top: 10px; padding: 6px 10px; font-size: 8px; letter-spacing: .65px; }.name { font-size: 15px; }.price { font-size: 11px; } }

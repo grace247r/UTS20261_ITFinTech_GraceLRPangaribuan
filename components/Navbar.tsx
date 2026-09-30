@@ -1,9 +1,2 @@
-import Link from "next/link";
-import { Search, ShoppingBag } from "lucide-react";
-import { useCart } from "@/context/CartContext";
-import styles from "@/styles/Home.module.css";
-
-export default function Navbar() {
-  const { cartCount } = useCart();
-  return <header className={styles.navbar}><a className={styles.logo} href="#top" aria-label="Dulce home">Dulce<span>&bull;</span></a><nav className={styles.navLinks} aria-label="Main navigation"><a href="#menu">Menu</a><a href="#freshly-baked-title">Fresh picks</a></nav><div className={styles.navActions}><button className={styles.iconButton} type="button" aria-label="Search desserts"><Search size={20} strokeWidth={2.5} /></button><Link className={styles.cartButton} href="/checkout" aria-label={`${cartCount} items in cart`}><ShoppingBag size={19} strokeWidth={2.5} /><span>{cartCount}</span></Link></div></header>;
-}
+import Link from "next/link"; import { Search, ShoppingBag, X } from "lucide-react"; import { useEffect, useRef, useState } from "react"; import { useCart } from "@/context/CartContext"; import styles from "@/styles/NavbarSearch.module.css";
+export default function Navbar({ searchQuery, onSearchChange }: { searchQuery: string; onSearchChange: (value: string) => void }) { const {cartCount}=useCart();const[open,setOpen]=useState(false);const input=useRef<HTMLInputElement>(null);useEffect(()=>{if(open)input.current?.focus()},[open]);return <header className={styles.header}><a className={styles.logo} href="#top">Dulce<span>&bull;</span></a><div className={styles.actions}>{open?<div className={styles.search}><Search size={17}/><input ref={input} value={searchQuery} onChange={e=>onSearchChange(e.target.value)} onKeyDown={e=>{if(e.key==="Escape"){onSearchChange("");setOpen(false)}}} placeholder="Search treats..."/><button onClick={()=>{onSearchChange("");setOpen(false)}} aria-label="Close search"><X size={17}/></button></div>:<button className={styles.icon} onClick={()=>setOpen(true)} aria-label="Search treats"><Search size={20}/></button>}<Link className={styles.cart} href="/checkout" aria-label={`${cartCount} items in cart`}><ShoppingBag size={19}/><span>{cartCount}</span></Link></div></header> }
