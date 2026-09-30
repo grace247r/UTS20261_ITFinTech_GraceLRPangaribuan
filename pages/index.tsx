@@ -4,6 +4,7 @@ import CategoryFilter from "@/components/CategoryFilter";
 import HeroBanner from "@/components/HeroBanner";
 import Navbar from "@/components/Navbar";
 import ProductCard, { type Product } from "@/components/ProductCard";
+import ProductDetailModal from "@/components/ProductDetailModal";
 import { useCart } from "@/context/CartContext";
 import styles from "@/styles/Home.module.css";
 
@@ -16,6 +17,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { addToCart } = useCart();
   useEffect(() => {
     const controller = new AbortController();
@@ -32,5 +34,5 @@ export default function Home() {
     return () => controller.abort();
   }, []);
   const filteredProducts = useMemo(() => products.filter((product) => activeCategory === "All" || product.category === activeCategory), [activeCategory, products]);
-  return <><Head><title>Dulce - Sweet things, happy things.</title><meta name="description" content="A playful dessert catalog by Dulce." /><meta name="viewport" content="width=device-width, initial-scale=1" /></Head><main className={styles.page}><div className={styles.container}><Navbar /><HeroBanner /><section className={styles.catalogue} id="menu" aria-labelledby="freshly-baked-title"><div className={styles.sectionHeading}><div><p className={styles.eyebrow}>MADE WITH A LITTLE MAGIC</p><h2 id="freshly-baked-title">Freshly Baked</h2></div><span>{filteredProducts.length} treats</span></div><CategoryFilter categories={categories} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />{isLoading && <div className={styles.catalogueMessage}>Preparing something sweet...</div>}{error && <div className={styles.catalogueMessage}>Oops, we couldn&apos;t load the treats.</div>}{!isLoading && !error && <div className={styles.productGrid}>{filteredProducts.map((product) => <ProductCard key={product.productId} product={product} onAddToCart={addToCart} />)}</div>}</section></div></main></>;
+  return <><Head><title>Dulce - Sweet things, happy things.</title><meta name="description" content="A playful dessert catalog by Dulce." /><meta name="viewport" content="width=device-width, initial-scale=1" /></Head><main className={styles.page}><div className={styles.container}><Navbar /><HeroBanner /><section className={styles.catalogue} id="menu" aria-labelledby="freshly-baked-title"><div className={styles.sectionHeading}><div><p className={styles.eyebrow}>MADE WITH A LITTLE MAGIC</p><h2 id="freshly-baked-title">Freshly Baked</h2></div><span>{filteredProducts.length} treats</span></div><CategoryFilter categories={categories} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />{isLoading && <div className={styles.catalogueMessage}>Preparing something sweet...</div>}{error && <div className={styles.catalogueMessage}>Oops, we couldn&apos;t load the treats.</div>}{!isLoading && !error && <div className={styles.productGrid}>{filteredProducts.map((product) => <ProductCard key={product.productId} product={product} onAddToCart={addToCart} onOpen={setSelectedProduct} />)}</div>}</section></div></main>{selectedProduct && <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />}</>;
 }
